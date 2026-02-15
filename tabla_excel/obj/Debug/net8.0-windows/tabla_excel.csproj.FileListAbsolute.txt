@@ -28,3 +28,4 @@ C:\Users\sebas\source\repos\tabla_excel\tabla_excel\bin\Debug\net8.0-windows\Six
 C:\Users\sebas\source\repos\tabla_excel\tabla_excel\bin\Debug\net8.0-windows\System.IO.Packaging.dll
 C:\Users\sebas\source\repos\tabla_excel\tabla_excel\obj\Debug\net8.0-windows\tabla_excel.csproj.AssemblyReference.cache
 C:\Users\sebas\source\repos\tabla_excel\tabla_excel\obj\Debug\net8.0-windows\tabla_ex.EB68BA31.Up2Date
+C:\Users\sebas\source\repos\tabla_excel\tabla_excel\obj\Debug\net8.0-windows\tabla_excel.sourcelink.json

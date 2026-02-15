@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Microsoft.Win32;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace tabla_excel
 {
@@ -13,6 +14,9 @@ namespace tabla_excel
         {
             InitializeComponent();
         }
+
+        private bool filtroActivo = false;
+        int sueldosInvalidos = 0;
 
         private void BtnSeleccionar_Click(object sender, RoutedEventArgs e)
         {
@@ -38,29 +42,55 @@ namespace tabla_excel
                     var hoja = wb.Worksheet(1);
                     var rango = hoja.RangeUsed();
 
-                    if (rango == null) return; // Excel vacío
-
-                    int columnas = rango.ColumnCount();
-
-                    // Crear columnas genéricas si no hay encabezado
-                    for (int i = 1; i <= columnas; i++)
-                    {
-                        tabla.Columns.Add($"Columna {i}");
+                    // Excel vacío
+                    if (rango == null) { 
+                        btnFiltrar.Visibility = Visibility.Collapsed;
+                        return;
                     }
 
-                    // Leer todas las filas
-                    foreach (var fila in rango.Rows())
+                    int columnas = rango.ColumnCount();
+                    int colSueldo = -1;
+
+                    // Cargar nombres de columnas (tipo_documento, nombres, sueldo)
+                    for (int i = 1; i <= columnas; i++)
                     {
-                        DataRow dr = tabla.NewRow();
-                        for (int i = 0; i < columnas; i++)
+                        string nombreCol = rango.Cell(1, i).GetValue<string>();
+                        tabla.Columns.Add(rango.Cell(1, i).GetValue<string>());
+
+                        if (nombreCol.Trim().ToLower() == "sueldo")
                         {
-                            dr[i] = fila.Cell(i + 1).GetValue<string>();
+                            colSueldo = i - 1;
                         }
-                        tabla.Rows.Add(dr);
+                    }
+
+                    // Expresión regular para solo dígitos
+                    Regex regexNumeros = new Regex(@"^\d+$");
+
+                    // Cargar datos
+                    for (int fila = 2; fila <= rango.RowCount(); fila++)
+                    {
+                        string valorSueldo = rango.Cell(fila, colSueldo + 1).GetValue<string>();
+                        if (!regexNumeros.IsMatch(valorSueldo))
+                        {
+                            sueldosInvalidos++;
+                            continue; // Para no agregar fila con sueldo inválido
+                        }
+                        DataRow nuevaFila = tabla.NewRow();
+                        for (int col = 1; col <= columnas; col++)
+                        {
+                            nuevaFila[col - 1] = rango.Cell(fila, col).GetValue<string>();
+                        }
+                        tabla.Rows.Add(nuevaFila);
                     }
                 }
 
                 dgDatos.ItemsSource = tabla.DefaultView;
+                btnFiltrar.Visibility = Visibility.Visible;
+
+                if (sueldosInvalidos > 0)
+                {
+                    MessageBox.Show($"Cantidad de sueldos mal digitados: {sueldosInvalidos}", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
             catch (Exception ex)
             {
@@ -68,5 +98,23 @@ namespace tabla_excel
             }
         }
 
+        private void Filtrar_Sueldos(object sender, RoutedEventArgs e)
+        {
+            if (dgDatos.ItemsSource is DataView vista)
+            {
+                if (!filtroActivo)
+                {
+                    vista.RowFilter = "sueldo > 1000000";
+                    btnFiltrar.Content = "Quitar Filtro";
+                    filtroActivo = true;
+                }
+                else
+                {
+                    vista.RowFilter = string.Empty;
+                    btnFiltrar.Content = "Filtrar por sueldo";
+                    filtroActivo = false;
+                }
+            }
+        }
     }
 }
