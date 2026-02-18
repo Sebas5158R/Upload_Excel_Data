@@ -8,20 +8,35 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="112*"/>
+            <RowDefinition Height="9*"/>
+            <RowDefinition Height="90*"/>
         </Grid.RowDefinitions>
 
-        <Button Grid.Row="0"
-            Content="Seleccionar Excel"
-            Height="30"
-            Click="BtnSeleccionar_Click"/>
+        <Button Grid.Row="1"
+            Content="Cargar Excel..."
+            Click="BtnSeleccionar_Click" Margin="10,0,667,194" FontSize="16" FontWeight="Bold" Panel.ZIndex="1"/>
 
         <DataGrid Grid.Row="1"
               x:Name="dgDatos"
               AutoGenerateColumns="True"
               IsReadOnly="True"
-              Margin="0,10,0,0"/>
-        <Button x:Name="btnFiltrar" Content="Filtrar sueldos" HorizontalAlignment="Left" Margin="234,283,0,0" Grid.Row="1" VerticalAlignment="Top" Height="32" Width="101" Click="Filtrar_Sueldos" Visibility="Collapsed"/>
+              Margin="10,50,481,14" Grid.RowSpan="2"/>
+        <Button x:Name="btnFiltrar" Content="Filtrar sueldos" HorizontalAlignment="Left" Margin="234,29,0,0" Grid.Row="3" VerticalAlignment="Top" Height="32" Width="101" Click="Filtrar_Sueldos" Visibility="Collapsed"/>
+        <Button Content="Exportar CSV..." HorizontalAlignment="Left" Height="30" Margin="400,0,0,0" VerticalAlignment="Top" Width="128" FontWeight="Bold" FontSize="16" Grid.Row="1" Click="Button_Click"/>
+        <DataGrid Grid.Row="3"
+              x:Name="dgTiposDocs"
+              AutoGenerateColumns="True"
+              IsReadOnly="True"
+              Margin="10,10,612,90"/>
+
+        <DataGrid Grid.Row="3"
+              x:Name="dgEstadisticas"
+              AutoGenerateColumns="True"
+              IsReadOnly="True"
+              Margin="234,10,250,90"/>
+        <Label Content="AGRUPAR TIPOS DE DOCUMENTOS" HorizontalAlignment="Left" Margin="5,4,0,0" Grid.Row="2" VerticalAlignment="Top" Height="28" Grid.RowSpan="2" FontWeight="Bold" Width="229"/>
+        <Label Content="ESTADISTICAS" HorizontalAlignment="Left" Margin="234,4,0,0" Grid.Row="2" VerticalAlignment="Top" Height="28" Grid.RowSpan="2" FontWeight="Bold"/>
     </Grid>
 </Window>
